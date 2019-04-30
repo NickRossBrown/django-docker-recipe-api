@@ -12,9 +12,14 @@ ENV PYTHONUNBUFFERED 1
 
 # COPY here copies Copy from the directory adjacent to the Docker file
 COPY ./requirements.txt /requirements.txt
+RUN apk add --update --no-cache postgresql-client
+RUN apk add --update --no-cache --virtual .tmp-build-deps \
+    gcc libc-dev linux-headers postgresql-dev
+RUN pip install -r /requirements.txt
 
 # RUN here takes the requirements file that we've just copied and it installs it using pip into the Docker image
 RUN pip install -r /requirements.txt
+RUN apk del .tmp-build-deps
 
 # --------------------------
 #  Set a working directory
