@@ -4,6 +4,7 @@ from django.utils.translation import gettext as _
 
 from core import models
 
+admin.site.site_header = 'Nick is Dope'
 
 class UserAdmin(BaseUserAdmin):
     ordering = ['id']
