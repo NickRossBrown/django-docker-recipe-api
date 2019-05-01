@@ -12,9 +12,9 @@ ENV PYTHONUNBUFFERED 1
 
 # COPY here copies Copy from the directory adjacent to the Docker file
 COPY ./requirements.txt /requirements.txt
-RUN apk add --update --no-cache postgresql-client
+RUN apk add --update --no-cache postgresql-client jpeg-dev
 RUN apk add --update --no-cache --virtual .tmp-build-deps \
-    gcc libc-dev linux-headers postgresql-dev
+    gcc libc-dev linux-headers postgresql-dev  musl-dev zlib zlib-dev
 RUN pip install -r /requirements.txt
 
 # RUN here takes the requirements file that we've just copied and it installs it using pip into the Docker image
@@ -36,8 +36,9 @@ COPY ./app /app
 #  Create a user
 # --------------------------
 
-# RUN here creates a user
-# -D here says the user is going to be used for running applications only
-RUN adduser -D boots
-# USER here switches to that user
-USER boots
+RUN mkdir -p /vol/web/media
+RUN mkdir -p /vol/web/static
+RUN adduser -D user
+RUN chown -R user:user /vol/
+RUN chmod -R 755 /vol/web
+USER user
